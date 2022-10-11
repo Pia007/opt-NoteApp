@@ -1,12 +1,15 @@
 package com.devmountain.noteApp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
+// 2e
 @Entity
 @Table(name = "Notes")
 public class Note {
 
-    /* Fields
+    /* 2f: Fields
        a. define an id for the table and the strategy to generate ids
        b. define body column and set the columnDefinition to "text"
     */
@@ -17,7 +20,12 @@ public class Note {
     @Column(columnDefinition = "text")
     private String body;
 
-    /* Constructors
+    /* 2i: define a private user of type User*/
+    @ManyToOne
+    @JsonBackReference
+    private User user;
+
+    /* 2h: Constructors
         a. create no-arg and all-arg constructors
     */
 
@@ -29,7 +37,7 @@ public class Note {
         this.body = body;
     }
 
-    /* Getters/Setters
+    /* 2g: Getters/Setters
         generate getters and setters to enable access to the private fields
     */
 
@@ -49,3 +57,12 @@ public class Note {
         this.body = body;
     }
 }
+
+/*
+ 2i: Defining the One-to-Many relationship
+ a: Determine which side is the owning side of the relationship
+    -- the side that is the "Many" part of the relationship
+        -- owns the foreign key
+ b: @ManyToOne creates the association within Hibernate
+ c: @JsonBackReference prevents infinite recursion when you deliver the resource up as JSON through the RESTful API endpoint you will create
+*/
