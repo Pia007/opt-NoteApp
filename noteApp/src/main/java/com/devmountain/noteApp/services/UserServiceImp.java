@@ -15,7 +15,7 @@ import java.util.Optional;
 
 // Part 3c
 @Service
-public class UserServiceImp {
+public class UserServiceImp implements UserService {
 
     //fields
     @Autowired
@@ -26,6 +26,7 @@ public class UserServiceImp {
 
     //methods
     //Register a user
+    @Override
     @Transactional
     public List<String> addUser(UserDto userDto) {
         List<String> response = new ArrayList<>();
@@ -36,11 +37,24 @@ public class UserServiceImp {
     }
 
     // User login
+    @Override
     public List<String> userLogin(UserDto userDto) {
         List<String> response = new ArrayList<>();
-        Optional<User> userOptional = userRepository.findByUserName(userDto.getUsername());
-    }
+        Optional<User> userOptional = userRepository.findByUsername(userDto.getUsername());
 
+        // conditional logic
+        if ( userOptional.isPresent()) {
+            if (passwordEncoder.matches(userDto.getPassword(), userOptional.get().getPassword())) {
+                response.add("User Login Granted");
+                response.add(String.valueOf(userOptional.get().getId()));
+            } else {
+                response.add("Username or password does not match");
+            }
+        } else {
+            response.add("Username or password does not match");
+        }
+        return response;
+    }
 }
 
 /*
@@ -83,5 +97,14 @@ Service Layer :  business logic
     -- initialize a new method variable called “response” of type “List<String>” and set it equal to a new ArrayList
     -- create a new method variable called “userOptional” of type “Optional<User>”
         -- set it equal to the “findByUsername” method we are about to create in the “userRepository” and pass in the username field from the “userDto” argument.
-        -- STOP AND GO TO UserRepository and create the "findByUsername" method
+            -- STOP AND GO TO UserRepository and create the "findByUsername" method,
+        -- pass in userDto.getUsername() as the argument
+    NOTE: Optionals help to avoid NullPointerExceptions
+    logic: create 2 conditional statements
+        if userOptional is present
+            if truthy, check if passwords match
+                 truthy - response message and add user_id to the response (Frontend may need it)
+            otherwise - response message
+        otherwise - response message
+        return response message
  */
