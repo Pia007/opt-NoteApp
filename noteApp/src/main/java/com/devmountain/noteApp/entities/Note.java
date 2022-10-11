@@ -1,5 +1,6 @@
 package com.devmountain.noteApp.entities;
 
+import com.devmountain.noteApp.dtos.NoteDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
@@ -25,17 +26,17 @@ public class Note {
     @JsonBackReference
     private User user;
 
-    /* 2h: Constructors
-        a. create no-arg and all-arg constructors
+    /* 2m: Constructor
+        custom constructor to accept the NoteDTO arg
+        add conditional logic to prevent null pointer exceptions
     */
 
-    public Note() {
+    public Note(NoteDto noteDto) {
+        if (noteDto.getBody() != null) {
+            this.body = noteDto.getBody();
+        }
     }
 
-    public Note(Long id, String body) {
-        this.id = id;
-        this.body = body;
-    }
 
     /* 2g: Getters/Setters
         generate getters and setters to enable access to the private fields
@@ -59,10 +60,18 @@ public class Note {
 }
 
 /*
- 2i: Defining the One-to-Many relationship
+ 2i: Defining the relationship
  a: Determine which side is the owning side of the relationship
     -- the side that is the "Many" part of the relationship
         -- owns the foreign key
  b: @ManyToOne creates the association within Hibernate
- c: @JsonBackReference prevents infinite recursion when you deliver the resource up as JSON through the RESTful API endpoint you will create
+ c: @JsonBackReference prevents infinite recursion when you deliver the
+    resource up as JSON through the RESTful API endpoint you will create
+
+2n: Add custom constructor to accept the NoteDto arg
+        id does not need to be defined when constructing a new obj
+        Why? @ID and @GeneratdValue annotations generate the id
+        Note's "user" cannot be defined from the DTO. Will be populated in the Service Layer
+
+
 */
