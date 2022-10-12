@@ -2,12 +2,16 @@ package com.devmountain.noteApp.entities;
 
 import com.devmountain.noteApp.dtos.NoteDto;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.*;
 
 // 2e
 @Entity
 @Table(name = "Notes")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Note {
 
     /* 2f: Fields
@@ -40,31 +44,10 @@ public class Note {
 
     /* 2g: Getters/Setters
         generate getters and setters to enable access to the private fields
+        Removed getters/setters and defaults constructor and used lombok
     */
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
 
 /*

@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findByUsername(userDto.getUsername());
 
         // conditional logic
-        if ( userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             if (passwordEncoder.matches(userDto.getPassword(), userOptional.get().getPassword())) {
                 response.add("User Login Granted");
                 response.add(String.valueOf(userOptional.get().getId()));

@@ -1,5 +1,6 @@
 package com.devmountain.noteApp.services;
 
+import ch.qos.logback.core.BasicStatusManager;
 import com.devmountain.noteApp.dtos.NoteDto;
 import com.devmountain.noteApp.entities.Note;
 import com.devmountain.noteApp.entities.User;
@@ -24,6 +25,18 @@ public class NoteServiceImp implements NoteService {
     private NoteRepository noteRepository;
 
     //methods
+
+    @Override
+    @Transactional
+    public List<NoteDto> getAllNotesByUserId(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            List<Note> noteList = noteRepository.findAllByUserEquals(optionalUser.get());
+            return noteList.stream().map(note -> new NoteDto(note)).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
     @Override
     @Transactional
     public void addNote(NoteDto noteDto, Long userId) {
@@ -60,17 +73,6 @@ public class NoteServiceImp implements NoteService {
 //        }
 //        return Optional.empty();
     }
-
-    @Override
-    @Transactional
-    public List<NoteDto> getAllNotesByUserId(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            List<Note> noteList = noteRepository.findAllByUserEquals(optionalUser.get());
-            return noteList.stream().map(note -> new NoteDto(note)).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
-    }
 }
 
 
@@ -84,35 +86,7 @@ public class NoteServiceImp implements NoteService {
    A. @Service
    B. Use @Autowired to inject dependencies for UserRepository and NoteRepository
    C. Methods
-       1. Adding a note
-            -- @Transactional - making sure the transaction is opened and closed
-            -- public method with arg noteDto of type NoteDto and userId of type Long
-            -- create a new Note and pass noteDto to the constructor
-            -- if optional user is present, assign the new note to that user
-            -- save and sync the note to the db via the note Repository
-       2. Deleting a note
-            -- @Transactional
-            -- public method with note id of type Long as arg
-            -- initialize a variable of type Optional<Note> called optionalNote
-                whose value is that of the note with that note id
-            -- if a note with that id is found, delete it
-       3. Updating a note
-            -- @Transactional
-            -- public method with noteDto of type NoteDto
-            -- initialize a variable of type Optional<Note> called optionalNote
-                set to the note with the same noteDto id in the noteRepository
-            -- if the note is present, update the body to that of the noteDto passed in
-            -- save and sync the note to the db via the note Repository
-       4. Get a note by noteId
-            -- @Transactional
-            -- public method called getNotebyId that returns an Optional<NoteDto> and accepts
-                the noteId as the arg
-            -- initialize a variable of type Optional<NoteDto> called optionalNote
-                set to the note with the same id in the noteRepository
-            -- if the optionalNote is present
-                return the note
-            -- otherwise return the boolean Optional.empty
-       5. Get All notes by a particular user_Id
+       1. Get All notes by a particular user_Id
             -- @Transactional
             -- public method called getAllNotesByUser that returns an Optional<User> and accepts
                 the userId as the arg
@@ -133,5 +107,34 @@ public class NoteServiceImp implements NoteService {
                 collect() is used to create a list from the results
                 Collectors.toList() returns a Collector implementation that accumulates
                     the input elements into a new List.
+
+       2. Adding a note
+            -- @Transactional - making sure the transaction is opened and closed
+            -- public method with arg noteDto of type NoteDto and userId of type Long
+            -- create a new Note and pass noteDto to the constructor
+            -- if optional user is present, assign the new note to that user
+            -- save and sync the note to the db via the note Repository
+       3. Deleting a note
+            -- @Transactional
+            -- public method with note id of type Long as arg
+            -- initialize a variable of type Optional<Note> called optionalNote
+                whose value is that of the note with that note id
+            -- if a note with that id is found, delete it
+       4. Updating a note
+            -- @Transactional
+            -- public method with noteDto of type NoteDto
+            -- initialize a variable of type Optional<Note> called optionalNote
+                set to the note with the same noteDto id in the noteRepository
+            -- if the note is present, update the body to that of the noteDto passed in
+            -- save and sync the note to the db via the note Repository
+       5. Get a note by noteId
+            -- @Transactional
+            -- public method called getNotebyId that returns an Optional<NoteDto> and accepts
+                the noteId as the arg
+            -- initialize a variable of type Optional<NoteDto> called optionalNote
+                set to the note with the same id in the noteRepository
+            -- if the optionalNote is present
+                return the note
+            -- otherwise return the boolean Optional.empty
 
  */
