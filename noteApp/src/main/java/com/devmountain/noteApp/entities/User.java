@@ -82,6 +82,14 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Set<Note> getNoteSet() {
+        return noteSet;
+    }
+
+    public void setNoteSet(Set<Note> noteSet) {
+        this.noteSet = noteSet;
+    }
 }
 
 /*
