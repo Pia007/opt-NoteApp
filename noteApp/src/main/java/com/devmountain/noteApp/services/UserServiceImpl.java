@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
         List<String> response = new ArrayList<>();
         User user = new User(userDto);
         userRepository.saveAndFlush(user);
-        response.add("User Added! Hooray!");
+        /* Frontend: redirecting user to login after registering*/
+        response.add("http://localhost:8080/login.html");
         return response;
     }
 
@@ -42,7 +43,8 @@ public class UserServiceImpl implements UserService {
         // conditional logic
         if (userOptional.isPresent()) {
             if (passwordEncoder.matches(userDto.getPassword(), userOptional.get().getPassword())) {
-                response.add("User Login Granted");
+                /* Frontend: redirecting user to home page after login*/
+                response.add("http://localhost:8080/home.html");
                 response.add(String.valueOf(userOptional.get().getId()));
             } else {
                 response.add("Username or password does not match");

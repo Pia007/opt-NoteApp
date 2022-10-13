@@ -1,6 +1,5 @@
 package com.devmountain.noteApp.services;
 
-import ch.qos.logback.core.BasicStatusManager;
 import com.devmountain.noteApp.dtos.NoteDto;
 import com.devmountain.noteApp.entities.Note;
 import com.devmountain.noteApp.entities.User;
